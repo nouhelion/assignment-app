@@ -1,23 +1,43 @@
-<h1>{{ title }}</h1>
-<ul>
-  <div *ngFor="let a of assignments">
-    <p  appRendu *ngIf="a.status; else nonsoumis" >
-      {{ a.nom }} à rendre le {{ a.dateRendu | date : "dd/MM/yyyy" }} , a été
-      rendu : {{ a.status }}
-    </p>
-    <ng-template #nonsoumis>
-        {{ a.nom }} à rendre le {{ a.dateRendu | date : "dd/MM/yyyy" }} , n'as pas été
-        rendu : {{ a.status }}
-    </ng-template>
-  </div>
-</ul>
+<h1>{{titre}}</h1>
 
-<!--
+
+<app-add-assignment *ngIf="formVisible" (nouvelAssignment)="ajouterAssignment($event)">
+</app-add-assignment>
+
+<main *ngIf="!formVisible" class="container">
+
+  <button mat-flat-button
+          color="warn"
+          (click)="formVisible=true"
+          class="ajouterBtn">
+    Ajouter un devoir
+  </button>
+
+  <mat-list *ngFor="let a of assignments">
+    <h3 mat-subheader>{{a.dateRendu|date:'dd/MM/yyyy'}}</h3>
+    <mat-list-item (click)="assignmentClique(a)">
+      <p *ngIf="a.status; else nonsoumis" appRendu>
+        {{a.nom}}. A été rendu à temps.
+      </p>
+      <ng-template #nonsoumis>
+        {{a.nom}}, n'a pas été rendu !
+      </ng-template>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+
+  <app-assignment-detail *ngIf="assignmentSelectionne" [assignmentTransmis]="assignmentSelectionne">
+
+  </app-assignment-detail>
+
+  <!--
 <table>
-    <tr *ngFor="let a of assignments">
-       <td>{{a.nom}}</td>
-       <td>{{a.dateRendu}}</td>
-       <td>{{a.status}}</td>
-    </tr>
+  <tr *ngFor="let a of assignments">
+    <td>{{a.nom}}</td>
+    <td>{{a.dateDeRendu}}</td>
+    <td>{{a.rendu}}</td>
+</tr>
 </table>
--->
+ -->
+
+</main>
